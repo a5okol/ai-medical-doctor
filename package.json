@@ -1,18 +1,13 @@
 {
-  "name": "binance-trade-bot",
+  "name": "ai-medicine-doctor-bot",
   "version": "0.70.0",
-  "description": "Binance Trading Bot",
+  "description": "AI Medicine Doctor Bot",
   "main": "./index.js",
   "directories": {
     "example": "examples",
     "test": "test"
   },
-  "keywords": [
-    "telegram",
-    "telegram bot",
-    "telegram bot api",
-    "bot"
-  ],
+  "keywords": [],
   "scripts": {
     "mocha": "mocha",
     "pretest": "npm run build",
@@ -29,11 +24,7 @@
   },
   "dependencies": {
     "array.prototype.findindex": "^2.0.2",
-    "axios": "^1.2.1",
-    "binance-api-node": "^0.12.2",
     "bl": "^1.2.3",
-    "brain.js": "^2.0.0-beta.18",
-    "dataframe-js": "^1.4.4",
     "debug": "^3.2.7",
     "dotenv": "^16.0.3",
     "eventemitter3": "^3.0.0",
@@ -41,9 +32,7 @@
     "file-type": "^3.9.0",
     "firebase-admin": "^11.4.1",
     "fs": "0.0.1-security",
-    "gpu.js": "^2.16.0",
     "lodash": "^4.17.21",
-    "machinelearn": "^2.1.5",
     "mime": "^1.6.0",
     "node-binance-api": "^0.13.1",
     "node-fetch": "^2.6.9",
@@ -52,7 +41,6 @@
     "pump": "^2.0.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
-    "train-test-split": "^1.0.0",
     "ws": "^8.11.0"
   },
   "devDependencies": {
@@ -67,12 +55,9 @@
     "babel-plugin-transform-strict-mode": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-register": "^6.26.0",
-    "concat-stream": "^1.6.0",
     "eslint": "^2.13.1",
     "eslint-config-airbnb": "^6.2.0",
     "eslint-plugin-mocha": "^4.11.0",
-    "is": "^3.2.1",
-    "is-ci": "^1.0.10",
     "istanbul": "^1.1.0-alpha.1",
     "jsdoc-to-markdown": "^3.0.3",
     "mocha": "^3.5.3",
