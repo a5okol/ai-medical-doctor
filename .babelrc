@@ -1,0 +1,8 @@
+{
+  "plugins": [
+    "transform-strict-mode",
+    "transform-object-rest-spread",
+    "transform-class-properties"
+  ],
+  "presets": ["babel-preset-es2015"]
+}
