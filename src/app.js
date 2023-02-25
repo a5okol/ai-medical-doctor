@@ -144,36 +144,32 @@ app.listen(process.env.PORT, async () => {
       } else if (msg.text === "/changelanguage") {
         selectLanguage(chatId);
       } else {
-        if (!userLanguage) {
-          selectLanguage(chatId);
-        } else {
-          bot
-            .sendMessage(chatId, TRANSLATIONS[userLanguage].waitingMessage)
-            .then((sentMessage) => {
-              setTimeout(() => {
-                bot.deleteMessage(chatId, sentMessage.message_id);
-              }, 20000);
-            });
-          const response = await openai.createCompletion({
-            model: "text-davinci-003",
-            prompt: `${TRANSLATIONS[userLanguage].additionalQuestionMessage} "${msg.text}"`,
-            max_tokens: 1200,
-            temperature: 0,
+        bot
+          .sendMessage(chatId, TRANSLATIONS[userLanguage].waitingMessage)
+          .then((sentMessage) => {
+            setTimeout(() => {
+              bot.deleteMessage(chatId, sentMessage.message_id);
+            }, 20000);
           });
-          setTimeout(() => {
-            const message = response.data.choices[0].text;
-            bot.sendMessage(chatId, message);
-            usersDataRef
-              .child(chatId)
-              .child("questions")
-              .update({
-                [msg.message_id]: {
-                  question: msg.text,
-                  answer: message,
-                },
-              });
-          }, 5000);
-        }
+        const response = await openai.createCompletion({
+          model: "text-davinci-003",
+          prompt: `${TRANSLATIONS[userLanguage].additionalQuestionMessage} "${msg.text}"`,
+          max_tokens: 1200,
+          temperature: 0,
+        });
+        setTimeout(() => {
+          const message = response.data.choices[0].text;
+          bot.sendMessage(chatId, message);
+          usersDataRef
+            .child(chatId)
+            .child("questions")
+            .update({
+              [msg.message_id]: {
+                question: msg.text,
+                answer: message,
+              },
+            });
+        }, 5000);
       }
     });
 
