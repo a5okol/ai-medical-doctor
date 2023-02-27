@@ -73,6 +73,10 @@ const TRANSLATIONS = {
   },
 };
 
+app.get("/_health", (_, res) => {
+  res.sendStatus(200);
+});
+
 app.use(express.json());
 app.listen(process.env.PORT, async () => {
   console.log("Express server is live");
@@ -128,6 +132,16 @@ app.listen(process.env.PORT, async () => {
   };
 
   try {
+    bot.on("polling_error", (error) => {
+      if (error.code === "ETELEGRAM") {
+        console.log("Received ETELEGRAM error with message: ", error.message);
+        console.log("Stopping server...");
+        process.exit();
+      } else {
+        console.log("Received polling error with message: ", error.message);
+      }
+    });
+
     bot.on("message", async (msg) => {
       const chatId = msg.chat.id;
       const userData = usersIDs?.[msg.chat.id];
