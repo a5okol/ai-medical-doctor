@@ -5,7 +5,8 @@ const express = require("express");
 const firebaseAdmin = require("firebase-admin");
 const { Configuration, OpenAIApi } = require("openai");
 
-const TelegramBot = require("..");
+// const TelegramBot = require("..");
+const TelegramBot = require("node-telegram-bot-api");
 const serviceAccount = require("../serviceAccountKey.json");
 
 firebaseAdmin.initializeApp({
@@ -28,7 +29,10 @@ const configuration = new Configuration({
 const app = express();
 const db = firebaseAdmin.database();
 const openai = new OpenAIApi(configuration);
-const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
+const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
+  polling: true,
+  instances: "max",
+});
 
 const STATIC_USERS_DATA = {};
 const TRANSLATIONS = {
