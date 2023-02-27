@@ -29,7 +29,10 @@ const configuration = new Configuration({
 const app = express();
 const db = firebaseAdmin.database();
 const openai = new OpenAIApi(configuration);
-const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
+const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
+  polling: true,
+  instances: "max",
+});
 
 const STATIC_USERS_DATA = {};
 const TRANSLATIONS = {
