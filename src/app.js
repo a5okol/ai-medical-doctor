@@ -5,7 +5,6 @@ const express = require("express");
 const firebaseAdmin = require("firebase-admin");
 const { Configuration, OpenAIApi } = require("openai");
 
-// const TelegramBot = require("..");
 const TelegramBot = require("node-telegram-bot-api");
 const serviceAccount = require("../serviceAccountKey.json");
 
@@ -73,23 +72,84 @@ const TRANSLATIONS = {
   },
 };
 
+app.use(express.json());
 app.get("/_health", (_, res) => {
   res.sendStatus(200);
 });
 
-app.use(express.json());
-app.listen(process.env.PORT, async () => {
-  console.log("Express server is live");
+const selectLanguage = (chatId) => {
+  bot.sendMessage(chatId, "Please select your language:", {
+    reply_markup: {
+      inline_keyboard: [
+        [
+          { text: "EN", callback_data: "en" },
+          { text: "UA", callback_data: "ua" },
+          { text: "BY", callback_data: "by" },
+          { text: "FR", callback_data: "fr" },
+          { text: "ES", callback_data: "es" },
+        ],
+      ],
+    },
+  });
+};
 
-  // ----------- // ------------ //
-
+bot.on("message", async (msg) => {
   const usersDataRef = db.ref("usersData");
   const getUsersIDs = await usersDataRef.get();
   const usersIDs = await getUsersIDs.val();
 
   // ----------- // ------------ //
 
-  function saveUserLanguage(chatId, language) {
+  const chatId = msg.chat.id;
+  const userData = usersIDs?.[msg.chat.id];
+  const userLanguage =
+    userData?.selectedLanguage || STATIC_USERS_DATA?.[chatId]?.selectedLanguage;
+
+  if (msg.text === "/start") {
+    if (!usersIDs?.[chatId]?.telegramData) {
+      const telegramData = msg.from;
+      usersDataRef.child(chatId).set({
+        telegramData,
+      });
+      selectLanguage(chatId);
+    } else {
+      bot.sendMessage(chatId, TRANSLATIONS[userLanguage].exampleMessage);
+    }
+  } else if (msg.text === "/changelanguage") {
+    selectLanguage(chatId);
+  } else {
+    bot
+      .sendMessage(chatId, TRANSLATIONS[userLanguage].waitingMessage)
+      .then(async (sentMessage) => {
+        const response = await openai.createCompletion({
+          model: "text-davinci-003",
+          prompt: `${TRANSLATIONS[userLanguage].additionalQuestionMessage} "${msg.text}"`,
+          max_tokens: 1200,
+          temperature: 0,
+        });
+        const message = response.data.choices[0].text;
+        bot.sendMessage(chatId, message);
+        usersDataRef
+          .child(chatId)
+          .child("questions")
+          .update({
+            [msg.message_id]: {
+              question: msg.text,
+              answer: message,
+            },
+          });
+        bot.deleteMessage(chatId, sentMessage.message_id);
+      });
+  }
+});
+
+bot.on("callback_query", async (callbackQuery) => {
+  const usersDataRef = db.ref("usersData");
+  const chatId = callbackQuery.message.chat.id;
+  const reply = callbackQuery.data;
+  const messageId = callbackQuery.message.message_id;
+
+  function saveUserLanguage(language) {
     usersDataRef.child(chatId).update({
       selectedLanguage: language,
     });
@@ -98,115 +158,16 @@ app.listen(process.env.PORT, async () => {
     };
   }
 
-  // function saveUserData(chatId, data) {
-  //   usersDataRef.child(chatId).update({
-  //     userData: data,
-  //   });
-  // }
-
-  // function saveUserName(userId, language) {
-  //   usersData[userId] = {
-  //     ...usersData[userId],
-  //     language,
-  //   };
-  // }
-
-  // function getUserLanguage(userId) {
-  //   return usersData[userId]?.language;
-  // }
-
-  const selectLanguage = (chatId) => {
-    bot.sendMessage(chatId, "Please select your language:", {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            { text: "EN", callback_data: "en" },
-            { text: "UA", callback_data: "ua" },
-            { text: "BY", callback_data: "by" },
-            { text: "FR", callback_data: "fr" },
-            { text: "ES", callback_data: "es" },
-          ],
-        ],
-      },
+  if (["en", "ua", "fr", "es", "by"].includes(reply)) {
+    bot.deleteMessage(chatId, messageId);
+    saveUserLanguage(reply);
+    bot.sendMessage(chatId, TRANSLATIONS[reply]?.welcomeMessege).then(() => {
+      bot.sendMessage(chatId, TRANSLATIONS[reply]?.exampleMessage);
     });
-  };
-
-  try {
-    bot.on("polling_error", (error) => {
-      if (error.code === "ETELEGRAM") {
-        console.log("Received ETELEGRAM error with message: ", error.message);
-        console.log("Stopping server...");
-        process.exit();
-      } else {
-        console.log("Received polling error with message: ", error.message);
-      }
-    });
-
-    bot.on("message", async (msg) => {
-      const chatId = msg.chat.id;
-      const userData = usersIDs?.[msg.chat.id];
-      const userLanguage =
-        userData?.selectedLanguage ||
-        STATIC_USERS_DATA?.[chatId]?.selectedLanguage;
-
-      if (msg.text === "/start") {
-        if (!usersIDs?.[chatId]?.telegramData) {
-          const telegramData = msg.from;
-          usersDataRef.child(chatId).set({
-            telegramData,
-          });
-          selectLanguage(chatId);
-        } else {
-          bot.sendMessage(chatId, TRANSLATIONS[userLanguage].exampleMessage);
-        }
-      } else if (msg.text === "/changelanguage") {
-        selectLanguage(chatId);
-      } else {
-        bot
-          .sendMessage(chatId, TRANSLATIONS[userLanguage].waitingMessage)
-          .then((sentMessage) => {
-            setTimeout(() => {
-              bot.deleteMessage(chatId, sentMessage.message_id);
-            }, 20000);
-          });
-        const response = await openai.createCompletion({
-          model: "text-davinci-003",
-          prompt: `${TRANSLATIONS[userLanguage].additionalQuestionMessage} "${msg.text}"`,
-          max_tokens: 1200,
-          temperature: 0,
-        });
-        setTimeout(() => {
-          const message = response.data.choices[0].text;
-          bot.sendMessage(chatId, message);
-          usersDataRef
-            .child(chatId)
-            .child("questions")
-            .update({
-              [msg.message_id]: {
-                question: msg.text,
-                answer: message,
-              },
-            });
-        }, 5000);
-      }
-    });
-
-    bot.on("callback_query", (callbackQuery) => {
-      const chatId = callbackQuery.message.chat.id;
-      const reply = callbackQuery.data;
-      const messageId = callbackQuery.message.message_id;
-
-      if (["en", "ua", "fr", "es", "by"].includes(reply)) {
-        bot.deleteMessage(chatId, messageId);
-        saveUserLanguage(chatId, reply);
-        bot
-          .sendMessage(chatId, TRANSLATIONS[reply]?.welcomeMessege)
-          .then(() => {
-            bot.sendMessage(chatId, TRANSLATIONS[reply]?.exampleMessage);
-          });
-      }
-    });
-  } catch (err) {
-    console.info("catch error:", err);
   }
+});
+
+bot.on("polling_error", (error) => {
+  console.log("Received ETELEGRAM error with message:", error.message);
+  bot.stopPolling();
 });
