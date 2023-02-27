@@ -5,7 +5,8 @@ const express = require("express");
 const firebaseAdmin = require("firebase-admin");
 const { Configuration, OpenAIApi } = require("openai");
 
-const TelegramBot = require("..");
+// const TelegramBot = require("..");
+const TelegramBot = require("node-telegram-bot-api");
 const serviceAccount = require("../serviceAccountKey.json");
 
 firebaseAdmin.initializeApp({
