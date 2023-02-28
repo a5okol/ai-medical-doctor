@@ -28,10 +28,7 @@ const configuration = new Configuration({
 const app = express();
 const db = firebaseAdmin.database();
 const openai = new OpenAIApi(configuration);
-const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
-  polling: true,
-  instances: "max",
-});
+const bot = new TelegramBot(process.env.TELEGRAM_TOKEN);
 
 const STATIC_USERS_DATA = {};
 const TRANSLATIONS = {
@@ -167,7 +164,13 @@ bot.on("callback_query", async (callbackQuery) => {
   }
 });
 
+const server = app.listen(process.env.PORT, () => {
+  console.log("Express server is live");
+  bot.startPolling();
+});
+
 bot.on("polling_error", (error) => {
   console.log("Received ETELEGRAM error with message:", error.message);
   bot.stopPolling();
+  server.close();
 });
