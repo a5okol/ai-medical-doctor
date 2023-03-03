@@ -1,8 +1,8 @@
 services:
-    - name: ai-medicine-doctor-bot
-      type: web
-      env: node
-      plan: starter
-      buildCommand: npm install
-      startCommand: node src/app.js
-      healthCheckPath: /_health
+  - name: ai-medicine-doctor-bot
+    type: web
+    env: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: node ./src/app.js
+    healthCheckPath: /_health

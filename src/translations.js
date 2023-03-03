@@ -10,11 +10,11 @@ module.exports = {
     subscribeMessage: "Please join the group to continue:",
     subscribedMessage: "Thanks for joining the group!",
     nonMemberMessage:
-      "You are not a member of the group. Please join to continue:",
-    joinGroupMessage: "Join the community",
+      "You are not a member of the group. Please join to continue!",
+    joinGroupMessage: "Join ⚕",
     checkMembershipMessage: "Check membership",
     worningMessage:
-      "❗Warning: Please remember that AI cannot replace qualified doctors. Only a doctor's diagnosis can provide the individualized approach, expertise, and treatment plan you need. \n\nYour health is very valuable, so it is important to ensure that you get the best care possible. Please schedule an appointment with your doctor.",
+      "❗Warning: Remember that AI cannot replace qualified doctors. Only a doctor's diagnosis can provide the individualized approach, expertise, and treatment plan you need.",
   },
   ua: {
     welcomeMessege:
@@ -25,11 +25,11 @@ module.exports = {
     subscribeMessage: "Будь ласка, приєднайтесь до групи, щоб продовжити:",
     subscribedMessage: "Дякуємо, що приєдналися до нас!",
     nonMemberMessage:
-      "Ви не є учасником нашої групи. Будь ласка, приєднайтесь, щоб продовжити:",
-    joinGroupMessage: "Приєднатися до спільноти",
+      "Ви не є учасником нашої групи. Будь ласка, приєднайтесь, щоб продовжити!",
+    joinGroupMessage: "Приєднатися ⚕",
     checkMembershipMessage: "Перевірити членство",
     worningMessage:
-      "❗Увага: Будь ласка, пам'ятайте, що AI не може замінити кваліфікованого лікаря. Тільки лікарський діагноз може забезпечити індивідуальний підхід, експертизу та план лікування, який вам потрібен. \n\nВаше здоров'я дуже цінне, тому важливо забезпечити найкращий догляд за ним. Будь ласка, заплануйте зустріч з вашим лікарем.",
+      "❗Увага: Пам'ятайте, що AI не може замінити кваліфікованого лікаря. Тільки лікарський діагноз може забезпечити індивідуальний підхід, експертизу та план лікування, який вам потрібен.",
   },
   fr: {
     welcomeMessege:
@@ -40,11 +40,11 @@ module.exports = {
     subscribeMessage: "Veuillez rejoindre le groupe pour continuer:",
     subscribedMessage: "Merci de nous avoir rejoint!",
     nonMemberMessage:
-      "Vous n'êtes pas membre du groupe. Veuillez vous joindre pour continuer:",
-    joinGroupMessage: "Rejoignez la communauté",
+      "Vous n'êtes pas membre du groupe. Veuillez vous joindre pour continuer!",
+    joinGroupMessage: "Rejoignez ⚕",
     checkMembershipMessage: "Vérifier l'adhésion",
     worningMessage:
-      "❗Attention: Veuillez noter que l'IA ne peut pas remplacer un médecin qualifié. Seul un diagnostic médical peut vous offrir une approche individualisée, une expertise et un plan de traitement dont vous avez besoin. \n\nVotre santé est très précieuse, il est donc important d'en prendre le meilleur soin. Veuillez prendre rendez-vous avec votre médecin.",
+      "❗Attention: Veuillez noter que l'IA ne peut pas remplacer un médecin qualifié. Seul un diagnostic médical peut vous offrir une approche individualisée, une expertise et un plan de traitement dont vous avez besoin.",
   },
   es: {
     welcomeMessege:
@@ -54,11 +54,11 @@ module.exports = {
     additionalQuestionMessage: "Sugerir un diagnóstico y tratamiento: ",
     subscribeMessage: "Únete al grupo para continuar:",
     subscribedMessage: "¡Gracias por unirse a nosotros!",
-    nonMemberMessage: "No eres miembro del grupo. Únete para continuar:",
-    joinGroupMessage: "Únete a la comunidad",
+    nonMemberMessage: "No eres miembro del grupo. Únete para continuar!",
+    joinGroupMessage: "Únete ⚕",
     checkMembershipMessage: "Comprobar la membresía",
     worningMessage:
-      "❗Atención: tenga en cuenta que la IA no puede reemplazar a un médico calificado. Solo un diagnóstico médico puede brindarle un enfoque individualizado, una experiencia y un plan de tratamiento que necesita. \n\nTu salud es muy valiosa, por eso es importante cuidarla lo mejor posible. Por favor programe una cita con su médico.",
+      "❗Atención: tenga en cuenta que la IA no puede reemplazar a un médico calificado. Solo un diagnóstico médico puede brindarle un enfoque individualizado, una experiencia y un plan de tratamiento que necesita.",
   },
   by: {
     welcomeMessege:
@@ -66,13 +66,13 @@ module.exports = {
     exampleMessage: `Для атрымання інфармацыі аб лячэнні просім вас адправіць запыт у наступным фармаце: \n\n"Запаленне, павышэнне тэмпературы да 38 градусаў, чханне, заложенность носа або насмарк, зялёная мокрота на працягу трох дзён пяршэнне ў горле, кашаль, вылучэнне слізі з насаглоткі, а таксама лёгкія галаўныя і слабыя болі ў целе".`,
     waitingMessage: "Калі ласка, пачакайце, я думаю...",
     additionalQuestionMessage: "Прапануйце дыягназ і як лячыць: ",
-    subscribeMessage: "Калі ласка, далучайцеся да групы, каб працягнуць:",
+    subscribeMessage: "Калі ласка, далучайцеся да групы, каб працягнуць!",
     subscribedMessage: "Дзякуй, што далучыліся да нас!",
     nonMemberMessage:
       "Вы не ўдзельнік нашай групы. Калі ласка, далучайцеся, каб працягнуць:",
-    joinGroupMessage: "Далучыцца да суполкі",
+    joinGroupMessage: "Далучыцца ⚕",
     checkMembershipMessage: "Праверыць членства",
     worningMessage:
-      "❗Увага: калі ласка, звярніце ўвагу, што інтэлектуальны агульны аб'ект не можа замяніць кваліфікаванага лякаря. Толькі медыцынскі дыягназ можа прадастаўляць вам індывідуальны падхад, досвід і план лячэння, які вам неабходны. \n\nВаша здароўе вельмі каштоўна, таму важна клапаціцца пра яго як мага лепш. Запішыцеся на прыём да ўрача.",
+      "❗Увага: Звярніце ўвагу, што інтэлектуальны агульны аб'ект не можа замяніць кваліфікаванага лякаря. Толькі медыцынскі дыягназ можа прадастаўляць вам індывідуальны падхад, досвід і план лячэння, які вам неабходны.",
   },
 };
