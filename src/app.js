@@ -82,27 +82,29 @@ bot.on("message", async (msg) => {
   const usersIDs = await getUsersIDs.val();
   const isGroupMember = await bot
     .getChatMember(telegramGroupId, msg.chat.id)
-    ?.then(
+    .then(
       (chatMember) =>
-        chatMember.status === "member" ||
-        chatMember.status === "creator" ||
-        chatMember.status === "administrator"
+        chatMember?.status === "member" ||
+        chatMember?.status === "creator" ||
+        chatMember?.status === "administrator"
     );
   // ----------- // ------------ //
 
   const chatId = msg.chat.id;
-  const userData = usersIDs?.[msg.chat.id];
+  const userData = usersIDs?.[chatId];
+  const existedUser = STATIC_USERS_DATA[chatId];
   const userLanguage =
-    userData?.selectedLanguage || STATIC_USERS_DATA?.[chatId]?.selectedLanguage;
+    userData?.selectedLanguage || (existedUser && existedUser.selectedLanguage);
+
   const {
-    exampleMessage,
-    worningMessage,
-    waitingMessage,
-    additionalQuestionMessage,
-  } = TRANSLATIONS[userLanguage];
+    exampleMessage = "",
+    worningMessage = "",
+    waitingMessage = "",
+    additionalQuestionMessage = "",
+  } = TRANSLATIONS[userLanguage] || {};
 
   if (msg.text === "/start") {
-    if (!usersIDs?.[chatId]?.telegramData) {
+    if (!userData?.telegramData) {
       const telegramData = msg.from;
       usersDataRef.child(chatId).set({
         telegramData,
@@ -127,6 +129,7 @@ bot.on("message", async (msg) => {
       });
       const message = response.data.choices[0].text;
       bot.sendMessage(chatId, message);
+      bot.deleteMessage(chatId, sentMessage.message_id);
       usersDataRef
         .child(chatId)
         .child("questions")
@@ -136,7 +139,6 @@ bot.on("message", async (msg) => {
             answer: message,
           },
         });
-      bot.deleteMessage(chatId, sentMessage.message_id);
     });
   }
 });
@@ -152,12 +154,10 @@ bot.on("callback_query", async (callbackQuery) => {
   const userLanguage =
     userData?.selectedLanguage || STATIC_USERS_DATA?.[chatId]?.selectedLanguage;
   const {
-    welcomeMessege,
-    worningMessage,
-    exampleMessage,
-    nonMemberMessage,
-    subscribedMessage,
-  } = TRANSLATIONS[userLanguage];
+    exampleMessage = "",
+    nonMemberMessage = "",
+    subscribedMessage = "",
+  } = TRANSLATIONS[userLanguage] || {};
 
   function saveUserLanguage(language) {
     usersDataRef.child(chatId).update({
@@ -171,9 +171,9 @@ bot.on("callback_query", async (callbackQuery) => {
   if (["en", "ua", "fr", "es", "by"].includes(reply)) {
     bot.deleteMessage(chatId, messageId);
     saveUserLanguage(reply);
-    bot.sendMessage(chatId, welcomeMessege).then(() => {
-      bot.sendMessage(chatId, exampleMessage).then(() => {
-        bot.sendMessage(chatId, worningMessage);
+    bot.sendMessage(chatId, TRANSLATIONS[reply].welcomeMessege).then(() => {
+      bot.sendMessage(chatId, TRANSLATIONS[reply].worningMessage).then(() => {
+        bot.sendMessage(chatId, TRANSLATIONS[reply].exampleMessage);
       });
     });
   } else if (reply === "check_membership") {
