@@ -210,6 +210,6 @@ const server = app.listen(process.env.PORT, () => {
 
 bot.on("polling_error", (error) => {
   console.log("Received ETELEGRAM error with message:", error.message);
-  bot.stopPolling();
-  server.close();
+  // bot.stopPolling();
+  // server.close();
 });
