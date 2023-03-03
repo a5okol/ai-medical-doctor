@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+/* eslint-disable no-undef */
 /* eslint-disable no-console */
 require("dotenv").config();
 const express = require("express");
@@ -76,21 +77,24 @@ const subscribeRequest = (chatId, userLanguage) => {
   });
 };
 
+const getIsNonGroupMember = async (chatId) => {
+  const chatMember = await bot.getChatMember(telegramGroupId, chatId);
+  const isGroupMember =
+    chatMember?.status === "member" ||
+    chatMember?.status === "creator" ||
+    chatMember?.status === "administrator";
+  return !isGroupMember;
+};
+
 bot.on("message", async (msg) => {
+  if (String(msg.chat.id) === String(telegramGroupId)) {
+    console.log("Message from group");
+    return;
+  }
+  const chatId = msg.chat.id;
   const usersDataRef = db.ref("usersData");
   const getUsersIDs = await usersDataRef.get();
   const usersIDs = await getUsersIDs.val();
-  const isGroupMember = await bot
-    .getChatMember(telegramGroupId, msg.chat.id)
-    .then(
-      (chatMember) =>
-        chatMember?.status === "member" ||
-        chatMember?.status === "creator" ||
-        chatMember?.status === "administrator"
-    );
-  // ----------- // ------------ //
-
-  const chatId = msg.chat.id;
   const userData = usersIDs?.[chatId];
   const existedUser = STATIC_USERS_DATA[chatId];
   const userLanguage =
@@ -117,7 +121,7 @@ bot.on("message", async (msg) => {
     }
   } else if (msg.text === "/changelanguage") {
     selectLanguage(chatId);
-  } else if (!isGroupMember) {
+  } else if (await getIsNonGroupMember(chatId)) {
     subscribeRequest(chatId, userLanguage);
   } else {
     bot.sendMessage(chatId, waitingMessage).then(async (sentMessage) => {
