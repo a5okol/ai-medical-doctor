@@ -48,93 +48,96 @@ bot.on("message", async (msg) => {
     exampleMessages: { dosage, diagnosis },
     service: { serviceMessage, diagnosisMessage, dosageMessage },
   } = TRANSLATIONS[userLanguage] || {};
+  const isNonGroupMember = await getIsNonGroupMember(chatId);
 
   if (!userData?.telegramData) {
     const telegramData = msg.from;
     usersDataRef.child(chatId).set({ telegramData });
     selectLanguage(chatId);
-  }
-
-  switch (msg.text) {
-    case "/start":
-      bot.sendMessage(chatId, diagnosis).then(() => {
-        bot.sendMessage(chatId, worningMessage);
-      });
-      break;
-
-    case "/changelanguage":
-      selectLanguage(chatId);
-      break;
-
-    case await getIsNonGroupMember(chatId):
-      subscribeRequest(chatId, userLanguage, bot);
-      break;
-
-    case "/services":
-      selectService(chatId, userLanguage);
-      break;
-
-    case "/subscribe":
-      // subscribeRequest(chatId, userLanguage);
-      break;
-
-    case "/diagnosis":
-      bot.sendMessage(chatId, worningMessage).then(() => {
+  } else if (
+    isNonGroupMember &&
+    msg.text !== "/start" &&
+    msg.text !== "/changelanguage"
+  ) {
+    subscribeRequest(chatId, userLanguage, bot);
+  } else {
+    switch (msg.text) {
+      case "/start":
         bot.sendMessage(chatId, diagnosis).then(() => {
-          waitingForResponse[chatId] = async (question) => {
-            openaiRequest({
-              chatId,
-              question,
-              userLanguage,
-              type: "diagnosis",
-            });
-          };
+          bot.sendMessage(chatId, worningMessage);
         });
-      });
-      break;
+        break;
 
-    case "/dosage":
-      bot.sendMessage(chatId, worningMessage).then(() => {
-        bot.sendMessage(chatId, dosage).then(() => {
-          waitingForResponse[chatId] = async (question) => {
-            openaiRequest({
-              chatId,
-              question,
-              userLanguage,
-              type: "dosage",
-            });
-          };
+      case "/changelanguage":
+        selectLanguage(chatId);
+        break;
+
+      case "/services":
+        selectService(chatId, userLanguage);
+        break;
+
+      case "/subscribe":
+        // subscribeRequest(chatId, userLanguage);
+        break;
+
+      case "/diagnosis":
+        bot.sendMessage(chatId, worningMessage).then(() => {
+          bot.sendMessage(chatId, diagnosis).then(() => {
+            waitingForResponse[chatId] = async (question) => {
+              openaiRequest({
+                chatId,
+                question,
+                userLanguage,
+                type: "diagnosis",
+              });
+            };
+          });
         });
-      });
-      break;
+        break;
 
-    case "/cancel":
-      bot.sendMessage(chatId, cancelMessage);
-      break;
+      case "/dosage":
+        bot.sendMessage(chatId, worningMessage).then(() => {
+          bot.sendMessage(chatId, dosage).then(() => {
+            waitingForResponse[chatId] = async (question) => {
+              openaiRequest({
+                chatId,
+                question,
+                userLanguage,
+                type: "dosage",
+              });
+            };
+          });
+        });
+        break;
 
-    default:
-      if (waitingForResponse[chatId]) {
-        const callback = waitingForResponse[chatId];
-        delete waitingForResponse[chatId];
-        callback(msg);
-      } else {
-        bot.sendMessage(chatId, serviceMessage, {
-          reply_markup: {
-            inline_keyboard: [
-              [
-                {
-                  text: diagnosisMessage,
-                  callback_data: "diagnosis",
-                },
-                {
-                  text: dosageMessage,
-                  callback_data: "dosage",
-                },
+      case "/cancel":
+        bot.sendMessage(chatId, cancelMessage);
+        break;
+
+      default:
+        if (waitingForResponse[chatId]) {
+          const callback = waitingForResponse[chatId];
+          delete waitingForResponse[chatId];
+          callback(msg);
+        } else {
+          bot.sendMessage(chatId, serviceMessage, {
+            reply_markup: {
+              inline_keyboard: [
+                [
+                  {
+                    text: diagnosisMessage,
+                    callback_data: "diagnosis",
+                  },
+                  {
+                    text: dosageMessage,
+                    callback_data: "dosage",
+                  },
+                ],
               ],
-            ],
-          },
-        });
-      }
+            },
+          });
+        }
+    }
   }
 });
 
@@ -152,6 +155,7 @@ bot.on("callback_query", async (callbackQuery) => {
     callbackQuery.message.from.language_code;
   const {
     worningMessage = "",
+    subscribedMessag = "",
     nonMemberMessage = "",
     exampleMessages: { dosage = "", diagnosis = "" } = {},
   } = TRANSLATIONS[userLanguage] || {};
@@ -177,8 +181,11 @@ bot.on("callback_query", async (callbackQuery) => {
         if (
           ["member", "creator", "administrator"].includes(chatMember.status)
         ) {
-          // bot.sendMessage(chatId, `${subscribedMessage}\n\n${exampleMessage}`);
-          bot.deleteMessage(chatId, messageId);
+          bot.deleteMessage(chatId, messageId).then(() => {
+            bot.sendMessage(chatId, subscribedMessag).then(() => {
+              selectService(chatId, reply);
+            });
+          });
         } else {
           bot.answerCallbackQuery(callbackQuery.id, {
             text: nonMemberMessage,
