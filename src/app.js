@@ -151,9 +151,9 @@ bot.on("callback_query", async (callbackQuery) => {
     STATIC_USERS_DATA?.[chatId]?.selectedLanguage ||
     callbackQuery.message.from.language_code;
   const {
-    worningMessage,
-    exampleMessages: { dosage, diagnosis },
+    worningMessage = "",
     nonMemberMessage = "",
+    exampleMessages: { dosage = "", diagnosis = "" } = {},
   } = TRANSLATIONS[userLanguage] || {};
 
   function saveUserLanguage(language) {
