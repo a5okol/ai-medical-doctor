@@ -43,10 +43,14 @@ bot.on("message", async (msg) => {
     existedUser?.selectedLanguage ||
     msg.from.language_code;
   const {
-    cancelMessage,
-    worningMessage,
-    exampleMessages: { dosage, diagnosis },
-    service: { serviceMessage, diagnosisMessage, dosageMessage },
+    cancelMessage = {},
+    worningMessage = {},
+    exampleMessages: { dosage = "", diagnosis = "" } = {},
+    service: {
+      serviceMessage = "",
+      diagnosisMessage = "",
+      dosageMessage = "",
+    } = {},
   } = TRANSLATIONS[userLanguage] || {};
   const isNonGroupMember = await getIsNonGroupMember(chatId);
 
@@ -170,9 +174,14 @@ bot.on("callback_query", async (callbackQuery) => {
   }
 
   if (["en", "ua", "fr", "es", "by"].includes(reply)) {
-    bot.deleteMessage(chatId, messageId).then(() => {
+    bot.deleteMessage(chatId, messageId).then(async () => {
+      const isNonGroupMember = await getIsNonGroupMember(chatId);
       saveUserLanguage(reply);
-      selectService(chatId, reply);
+      if (isNonGroupMember) {
+        subscribeRequest(chatId, reply, bot);
+      } else {
+        selectService(chatId, reply);
+      }
     });
   } else if (reply === "check_membership") {
     bot
