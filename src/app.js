@@ -49,17 +49,17 @@ bot.on("message", async (msg) => {
     service: { serviceMessage, diagnosisMessage, dosageMessage },
   } = TRANSLATIONS[userLanguage] || {};
 
+  if (!userData?.telegramData) {
+    const telegramData = msg.from;
+    usersDataRef.child(chatId).set({ telegramData });
+    selectLanguage(chatId);
+  }
+
   switch (msg.text) {
     case "/start":
-      if (!userData?.telegramData) {
-        const telegramData = msg.from;
-        usersDataRef.child(chatId).set({ telegramData });
-        selectLanguage(chatId);
-      } else {
-        bot.sendMessage(chatId, diagnosis).then(() => {
-          bot.sendMessage(chatId, worningMessage);
-        });
-      }
+      bot.sendMessage(chatId, diagnosis).then(() => {
+        bot.sendMessage(chatId, worningMessage);
+      });
       break;
 
     case "/changelanguage":
