@@ -43,13 +43,13 @@ bot.on("message", async (msg) => {
     existedUser?.selectedLanguage ||
     msg.from.language_code;
   const {
-    cancelMessage = {},
-    worningMessage = {},
+    cancelMessage = "",
+    worningMessage = "",
     exampleMessages: { dosage = "", diagnosis = "" } = {},
     service: {
+      dosageMessage = "",
       serviceMessage = "",
       diagnosisMessage = "",
-      dosageMessage = "",
     } = {},
   } = TRANSLATIONS[userLanguage] || {};
   const isNonGroupMember = await getIsNonGroupMember(chatId);
@@ -173,7 +173,7 @@ bot.on("callback_query", async (callbackQuery) => {
     };
   }
 
-  if (["en", "ua", "fr", "es", "by"].includes(reply)) {
+  if (["en", "ua", "fr", "es", "by", "ru", "ka"].includes(reply)) {
     bot.deleteMessage(chatId, messageId).then(async () => {
       const isNonGroupMember = await getIsNonGroupMember(chatId);
       saveUserLanguage(reply);
