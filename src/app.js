@@ -27,8 +27,18 @@ app.get("/_health", (_, res) => {
 
 const waitingForResponse = [];
 
+bot.on("new_chat_members", (msg) =>
+  bot.deleteMessage(msg.chat.id, msg.message_id)
+);
+bot.on("left_chat_member", (msg) => {
+  bot.deleteMessage(msg.chat.id, msg.message_id);
+});
+
 bot.on("message", async (msg) => {
-  if (String(msg.chat.id) === String(telegramGroupId)) {
+  if (
+    String(msg.chat.id) === String(telegramGroupId) ||
+    String(msg.chat.id).startsWith("-")
+  ) {
     console.log("Message from group");
     return;
   }
