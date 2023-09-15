@@ -90,10 +90,6 @@ bot.on("message", async (msg) => {
         selectService(chatId, userLanguage);
         break;
 
-      case "/subscribe":
-        // subscribeRequest(chatId, userLanguage);
-        break;
-
       case "/diagnosis":
         bot.sendMessage(chatId, worningMessage).then(() => {
           bot.sendMessage(chatId, diagnosis).then(() => {
