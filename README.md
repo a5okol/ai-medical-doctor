@@ -1,38 +1,11 @@
-# AI Doctor Chatbot
-
-This code provides the implementation of an AI Doctor chatbot, capable of analyzing users' symptoms and suggesting diagnoses and treatments based on them. The chatbot is built with Node.js, Firebase, and OpenAI, and it communicates with users via Telegram.
-
-## Setup
-
-To use this chatbot, you need to perform the following steps:
-
-1.  Clone this repository to your local machine.
-2.  Install the required dependencies by running `npm install`.
-3.  Create a Telegram bot and obtain its API token. You can learn how to do it from [here](https://core.telegram.org/bots#6-botfather).
-4.  Create a Firebase account and project, and create a Realtime Database within the project. You can learn how to do it from [here](https://firebase.google.com/docs/database/web/start).
-5.  Create a service account and obtain its private key in JSON format. You can learn how to do it from [here](https://firebase.google.com/docs/admin/setup#initialize-sdk).
-6.  Obtain an API key for the OpenAI API. You can learn how to do it from [here](https://beta.openai.com/docs/api-reference/introduction).
-7.  Create a `.env` file in the root directory of the project, and add the following environment variables to it:
-
-```makefile
-TELEGRAM_TOKEN=<your Telegram bot API token>
-FIREBASE_CLIENT_ID=<your Firebase service account client ID>
-FIREBASE_PROJECT_ID=<your Firebase project ID>
-FIREBASE_CLIENT_EMAIL=<your Firebase service account client email>
-FIREBASE_PRIVATE_KEY_ID=<your Firebase service account private key ID>
-FIREBASE_CLIENT_X509_CERT_URL=<your Firebase service account client x509 cert URL>
-FIREBASE_PRIVATE_KEY=<your Firebase service account private key in PEM format>
-FIREBASE_REALTIME_URL=<your Firebase Realtime Database URL>
-OPENAI_API_KEY=<your OpenAI API key>
-```
-
-Make sure to replace `<your Telegram bot API token>`, `<your Firebase ...>`, and `<your OpenAI API key>` with the respective values you obtained in the previous steps. 8. Run the chatbot by executing the `npm start` command.
-
-## Usage
-
-Once you have set up the chatbot, you can interact with it via the Telegram app. Simply start a conversation with the bot and follow the instructions it provides. The bot will ask you to describe your symptoms, and based on your input, it will suggest a diagnosis and treatment.
-The chatbot currently supports four languages: English, Ukrainian, French, and Spanish. You can switch between them by sending the corresponding language code to the bot (`en`, `ua`, `fr`, `es`).
-
-## Credits
-
-This chatbot was developed by [OpenAI](https://openai.com/) as part of its effort to build artificial intelligence that benefits humanity.
+<div class="markdown prose w-full break-words dark:prose-invert dark"><h1>AI Medical Doctor Telegram Bot</h1><h2>Project Overview</h2><p>This Telegram bot, the AI Medical Doctor, is designed to assist users in predicting medical diagnoses based on symptoms and calculating medication dosages. Please note that access to this bot is restricted to subscribed group members only.</p><h2>Dependencies</h2><p>To run this bot, you'll need the following dependencies:</p><ul><li><p><strong>Telegram API:</strong> You'll need a Telegram bot token and group ID for integration. Fill in the TELEGRAM_TOKEN and TELEGRAM_GROUP_ID fields in your <code>.env</code> file.</p></li><li><p><strong>Firebase:</strong> Firebase is used for data storage and real-time communication. Make sure to provide the necessary Firebase configuration in your <code>.env</code> file, including FIREBASE_PROJECT_ID, FIREBASE_CLIENT_ID, FIREBASE_PRIVATE_KEY_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_REALTIME_URL, FIREBASE_CLIENT_X509_CERT_URL, and FIREBASE_PRIVATE_KEY.</p></li><li><p><strong>Express.js:</strong> This Node.js framework is used to build the server for handling bot requests and interactions.</p></li><li><p><strong>ChatGPT API:</strong> Integration with the ChatGPT API is required for medical diagnosis predictions and medication dosage calculations. Provide your OPENAI_API_KEY in the <code>.env</code> file.</p></li></ul><h2>Environment Configuration</h2><p>Before running the bot, create an <code>.env</code> file in the root directory of your project and populate it with the following values:</p><pre><div class="bg-black rounded-md mb-4"><div class="flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans justify-between rounded-t-md"><span></span><button class="flex ml-auto gap-2"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="icon-sm" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg></button></div><div class="p-4 overflow-y-auto"><code class="!whitespace-pre hljs language-env">TELEGRAM_TOKEN=
+TELEGRAM_GROUP_ID=
+OPENAI_API_KEY=
+FIREBASE_PROJECT_ID=
+FIREBASE_CLIENT_ID=
+FIREBASE_PRIVATE_KEY_ID=
+FIREBASE_CLIENT_EMAIL=
+FIREBASE_REALTIME_URL=
+FIREBASE_CLIENT_X509_CERT_URL=
+FIREBASE_PRIVATE_KEY=
+</code></div></div></pre><h2>Usage</h2><ol><li><p>Clone this repository to your local machine.</p></li><li><p>Run <code>npm install</code> to install all project dependencies.</p></li><li><p>Populate the <code>.env</code> file with the required configuration values.</p></li><li><p>Run the bot using <code>npm start</code>.</p></li><li><p>Users in the subscribed group can interact with the bot to predict medical diagnoses based on symptoms and calculate medication dosages.</p></li></ol><h2>Features</h2><ul><li><p><strong>Language Support:</strong> The bot offers support for 7 languages to cater to a diverse user base.</p></li><li><p><strong>Medical Diagnosis Prediction:</strong> Users can input their symptoms, and the bot will provide predictions on possible medical conditions.</p></li><li><p><strong>Medication Dosage Calculation:</strong> The bot can calculate medication dosages based on user-specific parameters.</p></li></ul><h2>Additional Information</h2><ul><li>This bot can be used only after subscribing to the group.</li></ul><h2>Contributing</h2><p>We welcome contributions from the community to enhance and improve this AI Medical Doctor Telegram bot. Feel free to open issues, submit pull requests, or provide feedback to help us make this project even better.</p><h2>License</h2><p>This project is licensed under the <a href="LICENSE" target="_new">MIT License</a>.</p></div>
