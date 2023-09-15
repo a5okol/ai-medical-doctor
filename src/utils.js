@@ -74,6 +74,5 @@ module.exports = {
   selectService,
   selectLanguage,
   subscribeRequest,
-  // openaiRequestByType,
   getIsNonGroupMember,
 };

@@ -5,7 +5,6 @@ const TRANSLATIONS = require("./../translations");
 const { firebase } = require("./firebaseService");
 
 const db = firebase.database();
-
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
